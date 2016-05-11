@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nome do Pet"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
+                android:id="@+id/nome"/>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Raça do Pet"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
+                android:id="@+id/raca"/>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Características do Pet"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
+                android:id="@+id/carateristicas"/>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Telefone Para Contato"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
+                android:id="@+id/telefone"/>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nome do(a) Dono(a)"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
+                android:id="@+id/nomeDono"/>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Endereço"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
+                android:id="@+id/enderecoDono"/>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Último Lugar Visto"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
+                android:id="@+id/ultimoEndereco"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:text="Publicar"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
