@@ -14,9 +14,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
@@ -70,10 +73,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        CameraPosition cameraPosition = new CameraPosition.Builder().
+                target(new LatLng(-31.749632, -52.336349)).
+                zoom((float)12.5).
+                build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
 
             @Override
-            public void onMapLongClick(LatLng latLng) {
+            public void onMapLongClick(final LatLng latLng) {
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 alertDialog.setTitle("Alert");
                 alertDialog.setMessage("Inserir Pet Perdido");
@@ -81,12 +91,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent i = new Intent(MainActivity.this, PetInfo.class);
+                                i.putExtra("latitude",latLng.latitude);
+                                i.putExtra("longitude",latLng.longitude);
                                 startActivity(i);
                             }
                         });
                 alertDialog.show();
-
             }
         });
     }
+
 }
