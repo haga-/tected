@@ -30,6 +30,13 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Gênero do Pet"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
+                android:id="@+id/genero"/>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="Características do Pet"
                 android:layout_margin="@dimen/activity_vertical_margin"
                 android:padding="@dimen/activity_vertical_margin"

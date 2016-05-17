@@ -21,6 +21,14 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import io.realm.DynamicRealm;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
 
@@ -33,16 +41,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext()).deleteRealmIfMigrationNeeded().build();
 
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getInstance(realmConfig);
+
+        /*
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.commitTransaction();
+        */
+
+        final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
+        for(Cadastro c: cadastros){
+            Log.i("Main", c.getNomeDono() + " " + c.getTelefone());
+        }
+        realm.close();
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
     }
@@ -50,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -101,4 +116,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext()).deleteRealmIfMigrationNeeded().build();
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getInstance(realmConfig);
+
+
+        final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
+        for(Cadastro c: cadastros){
+            Log.i("Main", c.getNomeDono() + " " + c.getTelefone());
+            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+            if (mMap != null) {
+                mMap.addMarker(markerOptions);
+            }
+        }
+        realm.close();
+    }
 }
