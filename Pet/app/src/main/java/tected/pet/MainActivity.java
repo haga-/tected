@@ -1,11 +1,17 @@
 package tected.pet;
 
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,15 +38,18 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity { //implements OnMapReadyCallback
 
-    private GoogleMap mMap;
+    //private GoogleMap mMap;
     private Drawer result = null;
     private AccountHeader headerResult = null;
 
@@ -63,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         realm.commitTransaction();
         */
 
+        setSupportActionBar(toolbar);
+        //final ActionBar ab = getSupportActionBar();
+
         //cabeçalho do drawer
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -84,13 +96,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .withSavedInstance(savedInstanceState)
                 .build();
 
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        if (viewPager != null) {
+            setupViewPager(viewPager);
+        }
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        assert tabLayout != null;
+        tabLayout.setupWithViewPager(viewPager);
+
         final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
         for(Cadastro c: cadastros){
             Log.i("Main", c.getNomeDono() + " " + c.getTelefone());
         }
         realm.close();
+        /*
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
+        */
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //add the values which need to be saved from the drawer to the bundle
+        outState = result.saveInstanceState(outState);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -114,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return super.onOptionsItemSelected(item);
     }
-
+/*
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -148,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         onResume();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -167,5 +198,41 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         realm.close();
+    }
+    */
+    private void setupViewPager(ViewPager viewPager) {
+        Adapter adapter = new Adapter(getFragmentManager());
+        adapter.addFragment(new Timeline_fragment(), "Timeline");
+        adapter.addFragment(new Mapa_fragment(), "Região");
+        viewPager.setAdapter(adapter);
+    }
+
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
+        }
     }
 }

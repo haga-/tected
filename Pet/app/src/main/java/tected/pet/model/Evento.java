@@ -1,4 +1,4 @@
-package tected.pet.Models;
+package tected.pet.model;
 
 import com.google.android.gms.maps.model.MarkerOptions;
 
