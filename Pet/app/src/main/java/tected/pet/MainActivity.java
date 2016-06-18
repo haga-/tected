@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 alertDialog.show();
             }
         });
+        onResume();
     }
 
     @Override

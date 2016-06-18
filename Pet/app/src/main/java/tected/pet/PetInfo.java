@@ -3,6 +3,7 @@ package tected.pet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -48,26 +49,34 @@ public class PetInfo extends AppCompatActivity {
                 // Get a Realm instance for this thread
                 Realm realm = Realm.getInstance(realmConfig);
 
-                Cadastro c = new Cadastro(
-                        nomePet.getText().toString(),
-                        racaPet.getText().toString(),
-                        generoPet.getText().toString(),
-                        caracteristicasPet.getText().toString(),
-                        nomeDono.getText().toString(),
-                        enderecoDono.getText().toString(),
-                        ultimoEndereco.getText().toString(),
-                        telefone.getText().toString(),
-                        latitude,
-                        longitude
-                );
+                if(nomePet.getText().length() > 0 && caracteristicasPet.getText().length() > 0
+                        && nomeDono.getText().length() > 0 && ultimoEndereco.getText().length() > 0){
+                    Cadastro c = new Cadastro(
+                            nomePet.getText().toString(),
+                            racaPet.getText().toString(),
+                            generoPet.getText().toString(),
+                            caracteristicasPet.getText().toString(),
+                            nomeDono.getText().toString(),
+                            enderecoDono.getText().toString(),
+                            ultimoEndereco.getText().toString(),
+                            telefone.getText().toString(),
+                            latitude,
+                            longitude
+                    );
 
-                realm.beginTransaction();
-                realm.copyToRealm(c);
-                realm.commitTransaction();
-                realm.close();
+                    realm.beginTransaction();
+                    realm.copyToRealm(c);
+                    realm.commitTransaction();
+                    realm.close();
 
-                Toast.makeText(getApplicationContext(), "Cadastro Inserido.", Toast.LENGTH_SHORT).show();
-                finish();
+                    Toast.makeText(getApplicationContext(), "Cadastro Inserido.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                else{
+                    Snackbar.make(findViewById(R.id.ButtonPublicar), "Por favor, insira as informações obrigatórias.", Snackbar.LENGTH_SHORT);
+                }
+
+
 
             }
         });
