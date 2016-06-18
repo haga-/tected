@@ -23,6 +23,14 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import io.realm.DynamicRealm;
 import io.realm.Realm;
@@ -33,6 +41,8 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
+    private Drawer result = null;
+    private AccountHeader headerResult = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         realm.deleteAll();
         realm.commitTransaction();
         */
+
+        //cabeçalho do drawer
+        headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.mipmap.icone)
+                .build();
+
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withAccountHeader(headerResult)
+                .withTranslucentStatusBar(false)
+                .withCloseOnClick(true)
+                .withSelectedItem(-1)
+                .addDrawerItems(
+                        new SecondaryDrawerItem().withName("item1"),
+                        new SecondaryDrawerItem().withName("item2"),
+                        new SecondaryDrawerItem().withName("item3")
+                )
+                .withSavedInstance(savedInstanceState)
+                .build();
 
         final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
         for(Cadastro c: cadastros){
