@@ -25,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -33,6 +34,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import tected.pet.model.Evento;
+import tected.pet.model.Status;
 
 /**
  * Created by erick on 18/06/16.
@@ -132,16 +135,27 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
             public void onMapLongClick(final LatLng latLng) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Deseja avisar que um pet foi perdido?")
-                        .setTitle("Inserir Pet Perdido");
+                builder.setMessage("Deseja avisar que um pet foi perdido?");
+                        //.setTitle("Inserir Pet Perdido");
 
-                builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Perdi meu pet!", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent i = new Intent(getActivity().getApplicationContext(), PetInfo.class);
                         i.putExtra("latitude",latLng.latitude);
                         i.putExtra("longitude",latLng.longitude);
+                        i.putExtra("Tipo", Status.PERDIDO);
                         startActivity(i);
                         //Toast.makeText(getActivity().getApplicationContext(),"User clicked OK button", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNeutralButton("Avistei um pet perdido!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(getActivity().getApplicationContext(), PetInfo.class);
+                        i.putExtra("latitude",latLng.latitude);
+                        i.putExtra("longitude",latLng.longitude);
+                        i.putExtra("Tipo", Status.VISTO);
+                        startActivity(i);
                     }
                 });
                 builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
@@ -172,8 +186,29 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
         final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
         for(Cadastro c: cadastros){
             Log.i("Main", c.getNomeDono() + " " + c.getTelefone());
-            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
-            if (mMap != null) {
+            MarkerOptions markerOptions = null;
+
+            switch (c.getTipo()) {
+                case Status.PERDIDO: {
+                    markerOptions = new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                    break;
+                }
+                case Status.VISTO:{
+                    markerOptions = new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                    break;
+                }
+                case Status.ENCONTRADO: {
+                    markerOptions = new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                    break;
+                }
+            }
+            if (mMap != null && markerOptions != null) {
                 mMap.addMarker(markerOptions);
             }
         }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.annotations.Ignore;
+import tected.pet.model.Status;
 
 /**
  * Created by hut8 on 5/11/16.
@@ -26,6 +27,8 @@ public class PetInfo extends AppCompatActivity {
         Intent i = getIntent();
         final Double latitude = i.getDoubleExtra("latitude", 0.0f);
         final Double longitude = i.getDoubleExtra("longitude", 0.0f);
+        final int tipo = i.getIntExtra("Tipo", -1);
+        //final Status tipo = (Status) i.getSerializableExtra("Tipo");
 
         Button buttonPublicar = (Button) findViewById(R.id.ButtonPublicar);
 
@@ -51,6 +54,7 @@ public class PetInfo extends AppCompatActivity {
 
                 if(nomePet.getText().length() > 0 && caracteristicasPet.getText().length() > 0
                         && nomeDono.getText().length() > 0 && ultimoEndereco.getText().length() > 0){
+
                     Cadastro c = new Cadastro(
                             nomePet.getText().toString(),
                             racaPet.getText().toString(),
@@ -61,7 +65,8 @@ public class PetInfo extends AppCompatActivity {
                             ultimoEndereco.getText().toString(),
                             telefone.getText().toString(),
                             latitude,
-                            longitude
+                            longitude,
+                            tipo
                     );
 
                     realm.beginTransaction();
