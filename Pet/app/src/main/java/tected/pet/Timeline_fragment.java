@@ -20,7 +20,7 @@ public class Timeline_fragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         TextView tv = (TextView) v.findViewById(R.id.texto);
-        tv.setText("mentira");
+        //tv.setText("mentira");
 
         return v;
     }
