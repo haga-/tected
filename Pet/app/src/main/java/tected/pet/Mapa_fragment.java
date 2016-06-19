@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,27 +63,55 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        /*
+
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
 
             @Override
             public void onMapLongClick(final LatLng latLng) {
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                /*
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity().getApplicationContext(), R.style.AppTheme).create();
                 alertDialog.setTitle("Alert");
                 alertDialog.setMessage("Inserir Pet Perdido");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(MainActivity.this, PetInfo.class);
+                                /*
+                                Intent i = new Intent(getActivity().getApplicationContext(), PetInfo.class);
                                 i.putExtra("latitude",latLng.latitude);
                                 i.putExtra("longitude",latLng.longitude);
                                 startActivity(i);
+                                *
                             }
                         });
                 alertDialog.show();
+                */
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Deseja avisar que um pet foi perdido?")
+                        .setTitle("Inserir Pet Perdido");
+
+                builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent i = new Intent(getActivity().getApplicationContext(), PetInfo.class);
+                        i.putExtra("latitude",latLng.latitude);
+                        i.putExtra("longitude",latLng.longitude);
+                        startActivity(i);
+                        //Toast.makeText(getActivity().getApplicationContext(),"User clicked OK button", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Toast.makeText(getActivity().getApplicationContext(),"User cancelled the dialog", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // 3. Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
             }
         });
-        */
+
         onResume();
     }
 
