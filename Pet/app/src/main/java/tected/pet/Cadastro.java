@@ -1,5 +1,7 @@
 package tected.pet;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import tected.pet.model.Status;
 
@@ -17,11 +19,13 @@ public class Cadastro extends RealmObject {
     private String telefone;
     private double latitude,longitude;
     private int tipo;
+    private Date dataDeCriacao;
 
     public Cadastro(){
         nomePet = racaPet = generoPet = caracteristicasPet = nomeDono = enderecoDono = ultimoEndereco = telefone = null;
         latitude = longitude = 0;
         tipo = -1;
+        dataDeCriacao = null;
     }
 
     public Cadastro(String nomePet, String racaPet, String generoPet, String caracteristicasPet, String nomeDono, String enderecoDono, String ultimoEndereco, String telefone, double latitude, double longitude, int tipo) {
@@ -36,6 +40,7 @@ public class Cadastro extends RealmObject {
         this.latitude = latitude;
         this.longitude = longitude;
         this.tipo = tipo;
+        this.dataDeCriacao = new Date();
     }
 
     public String getNomePet() {
@@ -84,5 +89,9 @@ public class Cadastro extends RealmObject {
 
     public void setTipo(int tipo) {
         this.tipo = tipo;
+    }
+
+    public Date getDataDeCriacao() {
+        return dataDeCriacao;
     }
 }

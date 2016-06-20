@@ -31,6 +31,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
@@ -44,10 +48,12 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private static View rootView;
     private Location location = null;
+    //Map<Marker, Cadastro> markerCadastroMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView =inflater.inflate(R.layout.mapa_fragment, container, false);
+        //markerCadastroMap = new HashMap<>();
 
         MapFragment mapFragment = new MapFragment().newInstance();
 
@@ -135,32 +141,24 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
             public void onMapLongClick(final LatLng latLng) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Deseja avisar que um pet foi perdido?");
-                        //.setTitle("Inserir Pet Perdido");
+                builder.setTitle("Deseja avisar que um pet foi perdido?");
 
-                builder.setPositiveButton("Perdi meu pet!", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent i = new Intent(getActivity().getApplicationContext(), PetInfo.class);
-                        i.putExtra("latitude",latLng.latitude);
-                        i.putExtra("longitude",latLng.longitude);
-                        i.putExtra("Tipo", Status.PERDIDO);
-                        startActivity(i);
-                        //Toast.makeText(getActivity().getApplicationContext(),"User clicked OK button", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNeutralButton("Avistei um pet perdido!", new DialogInterface.OnClickListener() {
+                final CharSequence[] opcoes = {"Perdi meu pet!", "Avistei um pet perdido!", "Não"};
+
+                builder.setItems(opcoes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(getActivity().getApplicationContext(), PetInfo.class);
-                        i.putExtra("latitude",latLng.latitude);
-                        i.putExtra("longitude",latLng.longitude);
-                        i.putExtra("Tipo", Status.VISTO);
-                        startActivity(i);
-                    }
-                });
-                builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //Toast.makeText(getActivity().getApplicationContext(),"User cancelled the dialog", Toast.LENGTH_SHORT).show();
+                        if(which != 2) {
+                            Intent i = new Intent(getActivity().getApplicationContext(), PetInfo.class);
+                            i.putExtra("latitude", latLng.latitude);
+                            i.putExtra("longitude", latLng.longitude);
+                            if (which == 0) { //perdi meu pet
+                                i.putExtra("Tipo", Status.PERDIDO);
+                            } else { //foi somente avistado
+                                i.putExtra("Tipo", Status.VISTO);
+                            }
+                            startActivity(i);
+                        }
                     }
                 });
 
@@ -169,6 +167,28 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
 
             }
         });
+        /*
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+                RealmConfiguration realmConfig = new RealmConfiguration.Builder(getActivity().getApplicationContext()).deleteRealmIfMigrationNeeded().build();
+                // Get a Realm instance for this thread
+                Realm realm = Realm.getInstance(realmConfig);
+                realm.beginTransaction();
+                //realm.where(Cadastro.class).findFirst().
+                Cadastro c = markerCadastroMap.get(marker);
+                final RealmResults<Cadastro> found = realm.where(Cadastro.class).equalTo("nomeDono",);
+
+                Log.d("mapa", c.getNomeDono() + " " + c.getTipo());
+                realm.close();
+
+                return true;
+            }
+        });*/
+
+
 
         onResume();
     }
@@ -197,7 +217,7 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
                 }
                 case Status.VISTO:{
                     markerOptions = new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                             .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
                     break;
                 }
@@ -210,6 +230,8 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
             }
             if (mMap != null && markerOptions != null) {
                 mMap.addMarker(markerOptions);
+                //Marker marker = mMap.addMarker(markerOptions);
+                //markerCadastroMap.put(marker, c);
             }
         }
         realm.close();
