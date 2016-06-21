@@ -25,6 +25,9 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
+//http://cuidados-cachorro-gatos.webnode.com/rss/
+//http://www.procurasecachorro.com.br/blog/category/noticias/feed/
+
 public class MainActivity extends AppCompatActivity { //implements OnMapReadyCallback
 
     //private GoogleMap mMap;
@@ -63,13 +66,13 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
-                .withTranslucentStatusBar(false)
+                .withTranslucentStatusBar(true)
                 .withCloseOnClick(true)
                 .withSelectedItem(-1)
                 .addDrawerItems(
-                        new SecondaryDrawerItem().withName("item1"),
-                        new SecondaryDrawerItem().withName("item2"),
-                        new SecondaryDrawerItem().withName("item3")
+                        new SecondaryDrawerItem().withName("Home"),
+                        new SecondaryDrawerItem().withName("Cadastrar animal"),
+                        new SecondaryDrawerItem().withName("Sobre")
                 )
                 .withSavedInstance(savedInstanceState)
                 .build();

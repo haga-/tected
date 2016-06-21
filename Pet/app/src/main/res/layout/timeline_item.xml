@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true">
+
+        <!--> android:layout_height="70dp" <-->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        app:cardCornerRadius="2dp"
+        android:elevation="2dp"
+        app:cardElevation="2dp"
+        android:clickable="true"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_centerInParent="true">
+                <TextView
+                    android:id="@+id/tituloItem"
+                    android:textColor="@color/colorPrimaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="16sp"
+                    android:text="Viviane Araújo posa em clima de Carnaval e dá recado: &quot;Se a bunda não tremer, é falsa&quot;"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginBottom="2dp"
+                    android:typeface="sans"
+                    android:clickable="true"/>
+
+
+                    <!--> android:layout_marginTop="4dp" <-->
+
+                <TextView
+                    android:id="@+id/parteDoItem"
+                    android:textColor="@color/colorSecondText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:paddingRight="16dp"
+                    android:textSize="12sp"
+                    android:text="Uma das atrizes mais festejadas na Sapucaí, Viviane Araújo sabe, porém, que a responsabilidade é grande."
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="4dp"
+                    android:typeface="sans"
+                    android:clickable="true"
+
+                    android:lines="2"
+                    android:ellipsize="end"
+                    />
+                <!--> pqp, santos atributos estes acima <-->
+                    <!--> android:layout_marginBottom="4dp" <-->
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    <!-->
+        <View
+            android:id="@+id/vw_divider"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:layout_below="@+id/imagemNoticia"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+        <-->
+    </android.support.v7.widget.CardView>
+</LinearLayout>

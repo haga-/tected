@@ -30,6 +30,8 @@
         </activity>
         <activity android:name=".PetInfo"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Timeline_FullScreen_activity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
