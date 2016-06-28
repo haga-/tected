@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         //cabeçalho do drawer
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(R.mipmap.icone)
+                .withHeaderBackground(R.mipmap.background_material)
                 .build();
 
         result = new DrawerBuilder()
