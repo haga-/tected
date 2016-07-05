@@ -3,11 +3,7 @@ package tected.pet;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -19,13 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.holder.ImageHolder;
-import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -41,8 +34,6 @@ import studios.codelight.smartloginlibrary.SmartCustomLoginListener;
 import studios.codelight.smartloginlibrary.SmartLoginBuilder;
 import studios.codelight.smartloginlibrary.SmartLoginConfig;
 import studios.codelight.smartloginlibrary.manager.UserSessionManager;
-import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
-import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 
 //http://cuidados-cachorro-gatos.webnode.com/rss/
@@ -153,6 +144,7 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
             Intent intent = loginBuilder.with(getApplicationContext())
                     .isCustomLoginEnabled(true)
                     .setSmartCustomLoginHelper(loginListener)
+                    .setAppLogo(R.mipmap.logo)
                     .build();
             startActivityForResult(intent, SmartLoginConfig.LOGIN_REQUEST);
             Log.d("Main", "usuario NOPE esta logado");
