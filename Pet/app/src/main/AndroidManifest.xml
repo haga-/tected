@@ -32,6 +32,9 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Timeline_FullScreen_activity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="studios.codelight.smartloginlibrary.SmartLoginActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

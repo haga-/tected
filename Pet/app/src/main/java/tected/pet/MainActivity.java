@@ -2,6 +2,7 @@ package tected.pet;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -24,6 +25,12 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import studios.codelight.smartloginlibrary.SmartCustomLoginListener;
+import studios.codelight.smartloginlibrary.SmartLoginBuilder;
+import studios.codelight.smartloginlibrary.SmartLoginConfig;
+import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
+import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
+import studios.codelight.smartloginlibrary.users.SmartUser;
 
 //http://cuidados-cachorro-gatos.webnode.com/rss/
 //http://www.procurasecachorro.com.br/blog/category/noticias/feed/
@@ -46,6 +53,39 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
 
         // Get a Realm instance for this thread
         Realm realm = Realm.getInstance(realmConfig);
+
+        SmartLoginBuilder loginBuilder = new SmartLoginBuilder();
+
+        SmartCustomLoginListener loginListener = new SmartCustomLoginListener() {
+            @Override
+            public boolean customSignin(SmartUser smartUser) {
+                //do something with smartUser
+                Log.d("Main", "sign in");
+                return true;
+            }
+
+            @Override
+            public boolean customSignup(SmartUser smartUser) {
+                //do something with smartUser
+                Log.d("Main", "sign up");
+                return true;
+            }
+
+            @Override
+            public boolean customUserSignout(SmartUser smartUser) {
+                //do something with smartUser
+                Log.d("Main", "sign out");
+                return true;
+            }
+        };
+
+        Intent intent = loginBuilder.with(getApplicationContext())
+                .isCustomLoginEnabled(true).setSmartCustomLoginHelper(loginListener)
+                .build();
+        Log.d("Main", "passou no intent");
+        startActivityForResult(intent, SmartLoginConfig.LOGIN_REQUEST);
+
+
 
         /*
         realm.beginTransaction();
@@ -159,4 +199,32 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
             return mFragmentTitles.get(position);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Intent "data" contains the user object
+        if(resultCode == SmartLoginConfig.FACEBOOK_LOGIN_REQUEST){
+            SmartFacebookUser user;
+            try {
+                user = data.getParcelableExtra(SmartLoginConfig.USER);
+                //use this user object as per your requirement
+            }catch (Exception e){
+                Log.e(getClass().getSimpleName(), e.getMessage());
+            }
+        }else if(resultCode == SmartLoginConfig.GOOGLE_LOGIN_REQUEST){
+            SmartGoogleUser user;
+            try {
+                user = data.getParcelableExtra(SmartLoginConfig.USER);
+                //use this user object as per your requirement
+            }catch (Exception e){
+                Log.e(getClass().getSimpleName(), e.getMessage());
+            }
+        }else if(resultCode == SmartLoginConfig.CUSTOM_LOGIN_REQUEST){
+            SmartUser user = data.getParcelableExtra(SmartLoginConfig.USER);
+            //use this user object as per your requirement
+        }else if(resultCode == RESULT_CANCELED){
+            //Login Failed
+        }
+    }
+
 }
