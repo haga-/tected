@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
         su.setEmail("admin_pet@gmail.com");
         su.setFirstName("Administrador");
         su.setLastName("do sistema");
-        su.setPassword("admin12345");
+        su.setPassword("admin");
         su.setUsername("admin");
         final IProfile p1= new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
 
@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
         su.setEmail("usuario@gmail.com");
         su.setFirstName("Joao");
         su.setLastName("Silva");
-        su.setPassword("123456789");
-        su.setUsername("joaosilva");
+        su.setPassword("1234");
+        su.setUsername("joao");
         final IProfile p2 = new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
 
         usuarios.add(su);
@@ -326,8 +326,7 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
             Log.d("Main", "\"" + smartUser.getUsername() + "\"  \""+smartUser.getPassword()+"\"");
             Log.d("Main", String.valueOf(smartUser.getUsername().equals(user.getUsername())) +" "+ String.valueOf(smartUser.getPassword().equals(user.getPassword())));
             */
-            if(smartUser.equals(usuarios.get(i)))
-                return true;
+
             if(smartUser.getUsername().equals(user.getUsername()) && smartUser.getPassword().equals(user.getPassword()))
                 return true;
         }
