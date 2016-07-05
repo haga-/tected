@@ -26,6 +26,7 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.0'
     compile project(':smartloginlibrary-v0.5beta')
+    compile 'com.github.clans:fab:1.6.4'
 
     testCompile 'junit:junit:4.12'
 

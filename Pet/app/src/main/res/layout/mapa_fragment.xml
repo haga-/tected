@@ -11,5 +11,30 @@
         class="com.google.android.gms.maps.MapFragment"
         android:id="@+id/busMap"
         />
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="72dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        fab:menu_fab_label="Filtrar Por">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/cat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cat"
+            fab:fab_size="mini"
+            fab:fab_label="Gatos" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/dog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_dog"
+            fab:fab_size="mini"
+            fab:fab_label="Cachorros" />
+        </com.github.clans.fab.FloatingActionMenu>
 
 </RelativeLayout>

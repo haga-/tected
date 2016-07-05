@@ -10,6 +10,7 @@ import tected.pet.model.Status;
  */
 public class Cadastro extends RealmObject {
     private String nomePet;
+    private String especie;
     private String racaPet;
     private String generoPet;
     private String caracteristicasPet;
@@ -22,14 +23,19 @@ public class Cadastro extends RealmObject {
     private Date dataDeCriacao;
 
     public Cadastro(){
-        nomePet = racaPet = generoPet = caracteristicasPet = nomeDono = enderecoDono = ultimoEndereco = telefone = null;
+        nomePet = especie = racaPet = generoPet = caracteristicasPet = nomeDono = enderecoDono = ultimoEndereco = telefone = null;
         latitude = longitude = 0;
         tipo = -1;
         dataDeCriacao = null;
     }
 
-    public Cadastro(String nomePet, String racaPet, String generoPet, String caracteristicasPet, String nomeDono, String enderecoDono, String ultimoEndereco, String telefone, double latitude, double longitude, int tipo) {
+    public String getEspecie() {
+        return especie;
+    }
+
+    public Cadastro(String nomePet, String especie, String racaPet, String generoPet, String caracteristicasPet, String nomeDono, String enderecoDono, String ultimoEndereco, String telefone, double latitude, double longitude, int tipo) {
         this.nomePet = nomePet;
+        this.especie = especie;
         this.racaPet = racaPet;
         this.generoPet = generoPet;
         this.caracteristicasPet = caracteristicasPet;

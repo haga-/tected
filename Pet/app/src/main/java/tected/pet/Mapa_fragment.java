@@ -11,15 +11,20 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,6 +54,10 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
     private static View rootView;
     private Location location = null;
     //Map<Marker, Cadastro> markerCadastroMap;
+    private FloatingActionMenu menu ;
+    private FloatingActionButton cat;
+    private FloatingActionButton dog;
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -107,6 +116,53 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        menu = (FloatingActionMenu) rootView.findViewById(R.id.menu);
+        cat = (FloatingActionButton) rootView.findViewById(R.id.cat);
+        dog = (FloatingActionButton) rootView.findViewById(R.id.dog);
+        viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
+
+        menu.hideMenu(false);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                menu.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(rootView.getContext(), R.anim.fab_scale_up));
+                menu.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(rootView.getContext(), R.anim.fab_scale_down));
+            }
+        }, 150);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position == 0) {
+                    if (positionOffsetPixels > 730)
+                        menu.showMenu(true);
+                    else
+                        menu.hideMenu(true);
+                }
+                else if  (position == 1) {
+                    if (positionOffsetPixels > 100)
+                        menu.hideMenu(true);
+                    else
+                        menu.showMenu(true);
+                }
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override

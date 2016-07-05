@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">EncontraPet</string>
     <string name="action_settings">Settings</string>
+    <string-array name="especies">
+        <item>Gato</item>
+        <item>Cachorro</item>
+    </string-array>
 </resources>
