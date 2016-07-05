@@ -20,28 +20,32 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        fab:fab_shadowColor="#444"
+        fab:menu_colorNormal="@color/accent"
+        fab:menu_colorPressed="#00897B"
+        fab:menu_colorRipple="#00796B"
         fab:menu_fab_label="Filtros">
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_clear_filters"
-            fab:fab_size="mini"
-            fab:fab_label="Limpar" />
+            fab:fab_label="Limpar"
+            style="@style/MenuButtonsStyle"/>
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/cat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_cat"
-            fab:fab_size="mini"
-            fab:fab_label="Gatos" />
+            fab:fab_label="Gatos"
+            style="@style/MenuButtonsStyle"/>
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/dog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_dog"
-            fab:fab_size="mini"
-            fab:fab_label="Cachorros" />
+            fab:fab_label="Cachorros"
+            style="@style/MenuButtonsStyle"/>
         </com.github.clans.fab.FloatingActionMenu>
 
 </RelativeLayout>

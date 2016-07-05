@@ -37,4 +37,12 @@
         <item name="actionOverflowButtonStyle">@color/md_white_1000</item>
     </style>
 
+    <style name="MenuButtonsStyle">
+        <item name="fab_size">mini</item>
+        <item name="fab_shadowColor">#444</item>
+        <item name="fab_colorNormal">@color/accent</item>
+        <item name="fab_colorPressed">#00897B</item>
+        <item name="fab_colorRipple">#00796B</item>
+    </style>
+
 </resources>
