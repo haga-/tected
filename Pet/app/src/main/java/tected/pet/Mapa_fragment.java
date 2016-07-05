@@ -127,6 +127,9 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
         dog = (FloatingActionButton) rootView.findViewById(R.id.dog);
         viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
 
+        cat.setOnClickListener(clickListener);
+        dog.setOnClickListener(clickListener);
+
         menu.hideMenu(false);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -164,6 +167,24 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
+
+    private  View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v){
+
+            switch(v.getId()) {
+                case R.id.cat:
+                    mMap.clear();
+                    //final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
+                    break;
+                case R.id.dog:
+                    mMap.clear();
+
+                    break;
+            }
+
+        }
+    };
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
