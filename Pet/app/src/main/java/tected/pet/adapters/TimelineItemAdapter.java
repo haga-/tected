@@ -87,8 +87,8 @@ public class TimelineItemAdapter extends RecyclerView.Adapter<TimelineItemAdapte
         holder.tituloNoticia.setText(noticia.getTitulo());
 
         */
-        holder.tituloItem.setText("Titulo Position " + position);
-        holder.parteDoItem.setText("Parte do item Position"  + position);
+        holder.tituloItem.setText(tli.getTitulo());
+        holder.parteDoItem.setText(tli.getDescricao());
     }
 
     @Override

@@ -21,7 +21,7 @@ public class Timeline_FullScreen_activity extends AppCompatActivity {
         //setSupportActionBar(toolbar);
 
         assert toolbar != null;
-        toolbar.setTitle("Dica");
+        toolbar.setTitle("Informações");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
