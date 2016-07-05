@@ -64,7 +64,7 @@ public class Timeline_fragment extends Fragment implements RecyclerViewOnClickLi
         final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
 
         for (Cadastro c : cadastros) {
-            tlItems.add(new TimelineItem(c.getNomePet(), c.getCaracteristicasPet(), c.getDataDeCriacao().toString(), c.getTipo() + "", ""));
+            tlItems.add(new TimelineItem(c.getNomePet(), c.getCaracteristicasPet(), c.getDataDeCriacao().toString(), c.getTipo() + c.getNomeDono(), c.getTelefone()));
             Log.i("Log",tlItems.size()+"");
         }
 
@@ -107,8 +107,8 @@ public class Timeline_fragment extends Fragment implements RecyclerViewOnClickLi
     @Override
     public void onClickListener(View v, int position) {
         Intent intent = new Intent(getActivity(), Timeline_FullScreen_activity.class);
-        //intent.putExtra("Timeline", tlItems.get(position));
-        intent.putExtra("Timeline", position);
+        intent.putExtra("Timeline", tlItems.get(position));
+        //intent.putExtra("Timeline", position);
         startActivity(intent);
     }
 

@@ -2,11 +2,16 @@ package tected.pet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+
+import tected.pet.model.TimelineItem;
 
 /**
  * Created by erick on 20/06/16.
@@ -27,11 +32,29 @@ public class Timeline_FullScreen_activity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        int position = intent.getIntExtra("Timeline", -1);
+        final TimelineItem item = intent.getParcelableExtra("Timeline");
 
 
         TextView descricao = (TextView) findViewById(R.id.descricaoItem_fullscreen);
-        descricao.setText(String.valueOf(position));
+        assert descricao != null;
+        descricao.setText(item.getDescricao());
+
+        Button b = (Button) findViewById(R.id.botaoLocalizei);
+        assert b != null;
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 1. Instantiate an AlertDialog.Builder with its constructor
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+
+// 2. Chain together various setter methods to set the dialog characteristics
+                builder.setMessage("Informações para contato:\n" + "Nome: " + item.getTipo() + "\nTelefone: " + item.getLink())
+                        .setTitle("Contate o dono");
+
+// 3. Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+            }
+        });
     }
 
     @Override
