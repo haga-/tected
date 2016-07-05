@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.IIcon;
@@ -25,7 +26,9 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.holder.ImageHolder;
 import com.mikepenz.materialdrawer.holder.StringHolder;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.util.ArrayList;
@@ -62,12 +65,22 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        if (viewPager != null) {
+            setupViewPager(viewPager);
+        }
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        assert tabLayout != null;
+        tabLayout.setupWithViewPager(viewPager);
+
         usuarios = new ArrayList<>();
         SmartUser su = new SmartUser();
         su.setEmail("admin_pet@gmail.com");
         su.setFirstName("Administrador do sistema");
         su.setPassword("admin12345");
         su.setUsername("admin");
+        final IProfile p1= new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
 
         usuarios.add(su);
 
@@ -77,7 +90,9 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         su.setLastName("Silva");
         su.setPassword("123456789");
         su.setUsername("joaosilva");
+        final IProfile p2 = new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
 
+        usuarios.add(su);
 
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext()).deleteRealmIfMigrationNeeded().build();
@@ -85,9 +100,21 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         // Get a Realm instance for this thread
         Realm realm = Realm.getInstance(realmConfig);
 
-        SmartLoginBuilder loginBuilder = new SmartLoginBuilder();
+        final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
+        for (Cadastro c : cadastros) {
+            Log.i("Main", c.getNomeDono() + " " + c.getTelefone());
+        }
+        realm.close();
 
-        SmartCustomLoginListener loginListener = new SmartCustomLoginListener() {
+        /*
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.commitTransaction();
+        */
+
+        final SmartLoginBuilder loginBuilder = new SmartLoginBuilder();
+
+        final SmartCustomLoginListener loginListener = new SmartCustomLoginListener() {
             @Override
             public boolean customSignin(SmartUser smartUser) {
                 Log.d("Main", "sign in");
@@ -113,161 +140,178 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
             @Override
             public boolean customUserSignout(SmartUser smartUser) {
                 //do something with smartUser
+                UserSessionManager.logout(MainActivity.this, smartUser);
+                //acho que vai dar ruim
                 Log.d("Main", "sign out");
                 return true;
             }
         };
 
-        Intent intent = loginBuilder.with(getApplicationContext())
-                .isCustomLoginEnabled(true)
-                .setSmartCustomLoginHelper(loginListener)
-                .build();
-        startActivityForResult(intent, SmartLoginConfig.LOGIN_REQUEST);
-
         currentUser = UserSessionManager.getCurrentUser(getApplicationContext());
-        if(currentUser != null){
-            Log.d("Main", "usuario \"" + currentUser.getUsername() + "\" esta logado");
+        if(currentUser == null) {
+            Intent intent = loginBuilder.with(getApplicationContext())
+                    .isCustomLoginEnabled(true)
+                    .setSmartCustomLoginHelper(loginListener)
+                    .build();
+            startActivityForResult(intent, SmartLoginConfig.LOGIN_REQUEST);
+            Log.d("Main", "usuario NOPE esta logado");
+            currentUser = UserSessionManager.getCurrentUser(getApplicationContext());
+            if(currentUser == null){
+                Log.d("Main", "não logou msm");
+            }
+            else{
+                Log.d("Main", "usuario \"" + currentUser.getUsername() + "\" esta logado na segunda tentativa");
+            }
+
         }
         else{
-            Log.d("Main", "usuario NOPE esta logado");
+            Log.d("Main", "usuario \"" + currentUser.getUsername() + "\" esta logado");
         }
 
 
 
-        /*
-        realm.beginTransaction();
-        realm.deleteAll();
-        realm.commitTransaction();
-        */
+        if(currentUser != null) {
 
-        setSupportActionBar(toolbar);
-        //final ActionBar ab = getSupportActionBar();
+            IProfile profile = currentUser.getUsername().equals("admin") ? p1 : p2;
 
-        List<IProfile> teste = makeList();
+            //cabeçalho do drawer
+            headerResult = new AccountHeaderBuilder()
+                    .withActivity(this)
+                    .withHeaderBackground(R.mipmap.background_material)
+                    .withSelectionListEnabledForSingleProfile(false)
+                    .addProfiles(profile)
+                    .build();
+            //if(currentUser.getUsername().equals("Administrador do sistema")) {
+            if(currentUser.getUsername().equals("admin")) {
+                result = new DrawerBuilder()
+                        .withActivity(this)
+                        .withToolbar(toolbar)
+                        .withAccountHeader(headerResult)
+                        .withTranslucentStatusBar(true)
+                        .withCloseOnClick(true)
+                        .withSelectedItem(-1)
+                        .addDrawerItems(
+                                new SecondaryDrawerItem().withName("Home").withIdentifier(1).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Cadastrar animal").withIdentifier(2).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Informar animal perdido").withIdentifier(3).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Informar animal encontrado").withIdentifier(4).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Deletar Banco").withIdentifier(5).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Sobre").withIdentifier(6).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Logout").withIdentifier(7).withSelectable(false)
+                        )
+                        .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                            @Override
+                            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                                if(drawerItem != null){
+                                    long id = drawerItem.getIdentifier();
+                                    if(id == 7) {
+                                        Log.d("Main", "retorno de logout " +  UserSessionManager.logout(MainActivity.this, currentUser));
 
-        //cabeçalho do drawer
-        headerResult = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.mipmap.background_material)
-                .withSelectionListEnabledForSingleProfile(false)
-                .withProfiles(teste)
-                .build();
+                                    }
+                                    else if(id == 5){
+                                        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext()).deleteRealmIfMigrationNeeded().build();
+                                        Realm realm = Realm.getInstance(realmConfig);
+                                        realm.beginTransaction();
+                                        realm.deleteAll();
+                                        realm.commitTransaction();
+                                        realm.close();
+                                        Log.d("Main", "click on delete banco");
+                                    }
+                                }
+                                return false;
+                            }
+                        })
+                        .withSavedInstance(savedInstanceState)
+                        .build();
+            }
+            else{
+                result = new DrawerBuilder()
+                        .withActivity(this)
+                        .withToolbar(toolbar)
+                        .withAccountHeader(headerResult)
+                        .withTranslucentStatusBar(true)
+                        .withCloseOnClick(true)
+                        .withSelectedItem(-1)
+                        .addDrawerItems(
+                                new SecondaryDrawerItem().withName("Home").withIdentifier(1).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Cadastrar animal").withIdentifier(2).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Informar animal perdido").withIdentifier(3).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Informar animal encontrado").withIdentifier(4).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Sobre").withIdentifier(5).withSelectable(false),
+                                new SecondaryDrawerItem().withName("Logout").withIdentifier(6).withSelectable(false)
+                        )
+                        .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                            @Override
+                            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                                if (drawerItem != null) {
+                                    long id = drawerItem.getIdentifier();
+                                    if(id == 6) {
+                                        Log.d("Main", "retorno de logout " +  UserSessionManager.logout(MainActivity.this, currentUser);
 
-        result = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .withAccountHeader(headerResult)
-                .withTranslucentStatusBar(true)
-                .withCloseOnClick(true)
-                .withSelectedItem(-1)
-                .addDrawerItems(
-                        new SecondaryDrawerItem().withName("Home"),
-                        new SecondaryDrawerItem().withName("Cadastrar animal"),
-                        new SecondaryDrawerItem().withName("Sobre")
-                )
-                .withSavedInstance(savedInstanceState)
-                .build();
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        if (viewPager != null) {
-            setupViewPager(viewPager);
+                                    }
+                                }
+                                return false;
+                            }
+                        })
+                        .withSavedInstance(savedInstanceState)
+                        .build();
+            }
         }
+        else{
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        assert tabLayout != null;
-        tabLayout.setupWithViewPager(viewPager);
+            //cabeçalho do drawer
+            headerResult = new AccountHeaderBuilder()
+                    .withActivity(this)
+                    .withHeaderBackground(R.mipmap.background_material)
+                    .withSelectionListEnabledForSingleProfile(false)
+                    .build();
 
-        final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
-        for (Cadastro c : cadastros) {
-            Log.i("Main", c.getNomeDono() + " " + c.getTelefone());
+            result = new DrawerBuilder()
+                    .withActivity(this)
+                    .withToolbar(toolbar)
+                    .withAccountHeader(headerResult)
+                    .withTranslucentStatusBar(true)
+                    .withCloseOnClick(true)
+                    .withSelectedItem(-1)
+                    .addDrawerItems(
+                            new SecondaryDrawerItem().withName("Home").withIdentifier(1).withSelectable(false),
+                            //new SecondaryDrawerItem().withName("Cadastrar animal").withIdentifier(1).withSelectable(false),
+                            new SecondaryDrawerItem().withName("Informar animal perdido").withIdentifier(2).withSelectable(false),
+                            new SecondaryDrawerItem().withName("Informar animal encontrado").withIdentifier(3).withSelectable(false),
+                            new SecondaryDrawerItem().withName("Sobre").withIdentifier(4).withSelectable(false),
+                            new SecondaryDrawerItem().withName("Login").withIdentifier(5).withSelectable(false)
+                    )
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            if (drawerItem != null) {
+                                long id = drawerItem.getIdentifier();
+                                if(id == 5) {
+                                    Intent intent = loginBuilder.with(getApplicationContext())
+                                            .isCustomLoginEnabled(true)
+                                            .setSmartCustomLoginHelper(loginListener)
+                                            .build();
+                                    startActivityForResult(intent, SmartLoginConfig.LOGIN_REQUEST);
+                                    SmartUser user = UserSessionManager.getCurrentUser(getApplicationContext());
+                                    if(user != null){
+                                        Log.d("Main", "Usuario logado: \"" + user.getUsername() + "\"");
+                                    }
+                                    else{
+                                        Log.d("Main", "Usuario nao logou");
+                                    }
+                                }
+                            }
+                            return false;
+                        }
+                    })
+                    .withSavedInstance(savedInstanceState)
+                    .build();
         }
-        realm.close();
 
 
     }
 
-    List<IProfile> makeList(){
-        List<IProfile> list = new ArrayList<>();
-        if (currentUser != null) {
-            list.add(new IProfile() {
-                @Override
-                public Object withName(String name) {
-                    return currentUser.getFirstName();
-                }
 
-                @Override
-                public StringHolder getName() {
-                    return null;
-                }
-
-                @Override
-                public Object withEmail(String email) {
-                    return currentUser.getEmail();
-                }
-
-                @Override
-                public StringHolder getEmail() {
-                    return null;
-                }
-
-                @Override
-                public Object withIcon(Drawable icon) {
-                    return null;
-                }
-
-                @Override
-                public Object withIcon(Bitmap bitmap) {
-                    return null;
-                }
-
-                @Override
-                public Object withIcon(@DrawableRes int iconRes) {
-                    return null;
-                }
-
-                @Override
-                public Object withIcon(String url) {
-                    return null;
-                }
-
-                @Override
-                public Object withIcon(Uri uri) {
-                    return null;
-                }
-
-                @Override
-                public Object withIcon(IIcon icon) {
-                    return null;
-                }
-
-                @Override
-                public ImageHolder getIcon() {
-                    return null;
-                }
-
-                @Override
-                public Object withSelectable(boolean selectable) {
-                    return null;
-                }
-
-                @Override
-                public boolean isSelectable() {
-                    return false;
-                }
-
-                @Override
-                public Object withIdentifier(long identifier) {
-                    return null;
-                }
-
-                @Override
-                public long getIdentifier() {
-                    return 0;
-                }
-            });
-        }
-        return list;
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -340,6 +384,7 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         if(resultCode == SmartLoginConfig.CUSTOM_LOGIN_REQUEST){
             SmartUser user = data.getParcelableExtra(SmartLoginConfig.USER);
             //use this user object as per your requirement
+            Log.d("Main", user.getUsername() + " on activityresult");
         }else if(resultCode == RESULT_CANCELED){
             //Login Failed
         }
