@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
     public List<SmartUser> usuarios;
     SmartUser currentUser;
 
+    public IProfile p1;
+    public IProfile p2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
         su.setLastName("do sistema");
         su.setPassword("admin");
         su.setUsername("admin");
-        final IProfile p1= new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
+
+        p1 = new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
 
         usuarios.add(su);
 
@@ -87,7 +91,8 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
         su.setLastName("Silva");
         su.setPassword("1234");
         su.setUsername("joao");
-        final IProfile p2 = new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
+
+        p2 = new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
 
         usuarios.add(su);
 
@@ -276,9 +281,25 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
         }
 
 
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        /*
+        headerResult.removeProfile(headerResult.getActiveProfile());
+        if(currentUser != null){
+            if(currentUser.getUsername().equals("admin")){
+
+            }
+        }
+        else{
+
+        }
+        */
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -321,11 +342,6 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
         Log.d("Main", "sign in com implements");
         for(int i = 0; i < usuarios.size(); i++){
             SmartUser user = usuarios.get(i);
-            /*
-            Log.d("Main", "\"" + user.getUsername() + "\"  \""+user.getPassword()+"\"");
-            Log.d("Main", "\"" + smartUser.getUsername() + "\"  \""+smartUser.getPassword()+"\"");
-            Log.d("Main", String.valueOf(smartUser.getUsername().equals(user.getUsername())) +" "+ String.valueOf(smartUser.getPassword().equals(user.getPassword())));
-            */
 
             if(smartUser.getUsername().equals(user.getUsername()) && smartUser.getPassword().equals(user.getPassword()))
                 return true;
@@ -344,10 +360,10 @@ public class MainActivity extends AppCompatActivity implements SmartCustomLoginL
 
     @Override
     public boolean customUserSignout(SmartUser smartUser) {
+        Log.d("Main", "sign out com implements");
         //do something with smartUser
         UserSessionManager.logout(MainActivity.this, smartUser);
         //acho que vai dar ruim
-        Log.d("Main", "sign out com implements");
         return true;
     }
 
