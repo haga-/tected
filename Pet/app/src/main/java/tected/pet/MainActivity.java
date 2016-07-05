@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         usuarios = new ArrayList<>();
         SmartUser su = new SmartUser();
         su.setEmail("admin_pet@gmail.com");
-        su.setFirstName("Administrador do sistema");
+        su.setFirstName("Administrador");
+        su.setLastName("do sistema");
         su.setPassword("admin12345");
         su.setUsername("admin");
         final IProfile p1= new ProfileDrawerItem().withName(su.getFirstName() + " " + su.getLastName()).withEmail(su.getEmail());
