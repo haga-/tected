@@ -3,7 +3,11 @@ package tected.pet;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,12 +16,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.ImageHolder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +37,7 @@ import io.realm.RealmResults;
 import studios.codelight.smartloginlibrary.SmartCustomLoginListener;
 import studios.codelight.smartloginlibrary.SmartLoginBuilder;
 import studios.codelight.smartloginlibrary.SmartLoginConfig;
+import studios.codelight.smartloginlibrary.manager.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
 import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.users.SmartUser;
@@ -41,12 +51,33 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
     private Drawer result = null;
     private AccountHeader headerResult = null;
 
+    public List<SmartUser> usuarios;
+    SmartUser currentUser;
+    boolean gambiarraEstado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        usuarios = new ArrayList<>();
+        SmartUser su = new SmartUser();
+        su.setEmail("admin_pet@gmail.com");
+        su.setFirstName("Administrador do sistema");
+        su.setPassword("admin12345");
+        su.setUsername("admin");
+
+        usuarios.add(su);
+
+        su = new SmartUser();
+        su.setEmail("usuario@gmail.com");
+        su.setFirstName("Joao");
+        su.setLastName("Silva");
+        su.setPassword("123456789");
+        su.setUsername("joaosilva");
+
 
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext()).deleteRealmIfMigrationNeeded().build();
@@ -59,9 +90,17 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         SmartCustomLoginListener loginListener = new SmartCustomLoginListener() {
             @Override
             public boolean customSignin(SmartUser smartUser) {
-                //do something with smartUser
                 Log.d("Main", "sign in");
-                return true;
+                for(int i = 0; i < usuarios.size(); i++){
+                    SmartUser user = usuarios.get(i);
+                    if(smartUser.equals(usuarios.get(i)))
+                        return true;
+                    if(smartUser.getUsername() == user.getUsername() && smartUser.getPassword() == user.getPassword())
+                        return true;
+                }
+                //return false;
+                Toast.makeText(getApplicationContext(), "Usuário não cadastrado", Toast.LENGTH_LONG).show();
+                return false;
             }
 
             @Override
@@ -80,10 +119,18 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         };
 
         Intent intent = loginBuilder.with(getApplicationContext())
-                .isCustomLoginEnabled(true).setSmartCustomLoginHelper(loginListener)
+                .isCustomLoginEnabled(true)
+                .setSmartCustomLoginHelper(loginListener)
                 .build();
-        Log.d("Main", "passou no intent");
         startActivityForResult(intent, SmartLoginConfig.LOGIN_REQUEST);
+
+        currentUser = UserSessionManager.getCurrentUser(getApplicationContext());
+        if(currentUser != null){
+            Log.d("Main", "usuario \"" + currentUser.getUsername() + "\" esta logado");
+        }
+        else{
+            Log.d("Main", "usuario NOPE esta logado");
+        }
 
 
 
@@ -96,10 +143,14 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         setSupportActionBar(toolbar);
         //final ActionBar ab = getSupportActionBar();
 
+        List<IProfile> teste = makeList();
+
         //cabeçalho do drawer
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.background_material)
+                .withSelectionListEnabledForSingleProfile(false)
+                .withProfiles(teste)
                 .build();
 
         result = new DrawerBuilder()
@@ -133,6 +184,89 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
         realm.close();
 
 
+    }
+
+    List<IProfile> makeList(){
+        List<IProfile> list = new ArrayList<>();
+        if (currentUser != null) {
+            list.add(new IProfile() {
+                @Override
+                public Object withName(String name) {
+                    return currentUser.getFirstName();
+                }
+
+                @Override
+                public StringHolder getName() {
+                    return null;
+                }
+
+                @Override
+                public Object withEmail(String email) {
+                    return currentUser.getEmail();
+                }
+
+                @Override
+                public StringHolder getEmail() {
+                    return null;
+                }
+
+                @Override
+                public Object withIcon(Drawable icon) {
+                    return null;
+                }
+
+                @Override
+                public Object withIcon(Bitmap bitmap) {
+                    return null;
+                }
+
+                @Override
+                public Object withIcon(@DrawableRes int iconRes) {
+                    return null;
+                }
+
+                @Override
+                public Object withIcon(String url) {
+                    return null;
+                }
+
+                @Override
+                public Object withIcon(Uri uri) {
+                    return null;
+                }
+
+                @Override
+                public Object withIcon(IIcon icon) {
+                    return null;
+                }
+
+                @Override
+                public ImageHolder getIcon() {
+                    return null;
+                }
+
+                @Override
+                public Object withSelectable(boolean selectable) {
+                    return null;
+                }
+
+                @Override
+                public boolean isSelectable() {
+                    return false;
+                }
+
+                @Override
+                public Object withIdentifier(long identifier) {
+                    return null;
+                }
+
+                @Override
+                public long getIdentifier() {
+                    return 0;
+                }
+            });
+        }
+        return list;
     }
 
     @Override
@@ -203,23 +337,7 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //Intent "data" contains the user object
-        if(resultCode == SmartLoginConfig.FACEBOOK_LOGIN_REQUEST){
-            SmartFacebookUser user;
-            try {
-                user = data.getParcelableExtra(SmartLoginConfig.USER);
-                //use this user object as per your requirement
-            }catch (Exception e){
-                Log.e(getClass().getSimpleName(), e.getMessage());
-            }
-        }else if(resultCode == SmartLoginConfig.GOOGLE_LOGIN_REQUEST){
-            SmartGoogleUser user;
-            try {
-                user = data.getParcelableExtra(SmartLoginConfig.USER);
-                //use this user object as per your requirement
-            }catch (Exception e){
-                Log.e(getClass().getSimpleName(), e.getMessage());
-            }
-        }else if(resultCode == SmartLoginConfig.CUSTOM_LOGIN_REQUEST){
+        if(resultCode == SmartLoginConfig.CUSTOM_LOGIN_REQUEST){
             SmartUser user = data.getParcelableExtra(SmartLoginConfig.USER);
             //use this user object as per your requirement
         }else if(resultCode == RESULT_CANCELED){
