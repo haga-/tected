@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity { //implements OnMapReadyCal
                                 if (drawerItem != null) {
                                     long id = drawerItem.getIdentifier();
                                     if(id == 6) {
-                                        Log.d("Main", "retorno de logout " +  UserSessionManager.logout(MainActivity.this, currentUser);
+                                        Log.d("Main", "retorno de logout " +  UserSessionManager.logout(MainActivity.this, currentUser));
 
                                     }
                                 }
