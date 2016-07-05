@@ -20,7 +20,14 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        fab:menu_fab_label="Filtrar Por">
+        fab:menu_fab_label="Filtros">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_filters"
+            fab:fab_size="mini"
+            fab:fab_label="Limpar" />
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/cat"
             android:layout_width="wrap_content"

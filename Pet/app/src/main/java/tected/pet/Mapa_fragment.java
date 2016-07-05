@@ -57,6 +57,7 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionMenu menu ;
     private FloatingActionButton cat;
     private FloatingActionButton dog;
+    private FloatingActionButton clear;
     private ViewPager viewPager;
 
     @Override
@@ -125,10 +126,12 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
         menu = (FloatingActionMenu) rootView.findViewById(R.id.menu);
         cat = (FloatingActionButton) rootView.findViewById(R.id.cat);
         dog = (FloatingActionButton) rootView.findViewById(R.id.dog);
+        clear = (FloatingActionButton) rootView.findViewById(R.id.clear);
         viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
 
         cat.setOnClickListener(clickListener);
         dog.setOnClickListener(clickListener);
+        clear.setOnClickListener(clickListener);
 
         menu.hideMenu(false);
         new Handler().postDelayed(new Runnable() {
@@ -171,15 +174,106 @@ public class Mapa_fragment extends Fragment implements OnMapReadyCallback {
     private  View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v){
-
+            // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+            RealmConfiguration realmConfig = new RealmConfiguration.Builder(getActivity().getApplicationContext()).deleteRealmIfMigrationNeeded().build();
+            // Get a Realm instance for this thread
+            Realm realm = Realm.getInstance(realmConfig);
+            final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
             switch(v.getId()) {
                 case R.id.cat:
                     mMap.clear();
-                    //final RealmResults<Cadastro> cadastros = realm.where(Cadastro.class).findAll();
+                    for(Cadastro c: cadastros){
+                        MarkerOptions markerOptions = null;
+                        if (c.getEspecie().equals("Gato")){
+                            switch (c.getTipo()) {
+                                case Status.PERDIDO: {
+                                    markerOptions = new MarkerOptions()
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                    break;
+                                }
+                                case Status.VISTO:{
+                                    markerOptions = new MarkerOptions()
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                    break;
+                                }
+                                case Status.ENCONTRADO: {
+                                    markerOptions = new MarkerOptions()
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                    break;
+                                }
+                            }
+                        }
+                        if (mMap != null && markerOptions != null) {
+                            mMap.addMarker(markerOptions);
+                        }
+                    }
+                    realm.close();
                     break;
                 case R.id.dog:
                     mMap.clear();
+                    for(Cadastro c: cadastros){
+                        MarkerOptions markerOptions = null;
+                        if (c.getEspecie().equals("Cachorro")){
+                            switch (c.getTipo()) {
+                                case Status.PERDIDO: {
+                                    markerOptions = new MarkerOptions()
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                    break;
+                                }
+                                case Status.VISTO:{
+                                    markerOptions = new MarkerOptions()
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                    break;
+                                }
+                                case Status.ENCONTRADO: {
+                                    markerOptions = new MarkerOptions()
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                            .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                    break;
+                                }
+                            }
+                        }
+                        if (mMap != null && markerOptions != null) {
+                            mMap.addMarker(markerOptions);
+                        }
+                    }
+                    realm.close();
+                    break;
+                case R.id.clear:
+                    mMap.clear();
+                    for(Cadastro c: cadastros){
+                        MarkerOptions markerOptions = null;
+                        switch (c.getTipo()) {
+                            case Status.PERDIDO: {
+                                markerOptions = new MarkerOptions()
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                        .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                break;
+                            }
+                            case Status.VISTO:{
+                                markerOptions = new MarkerOptions()
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                        .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                break;
+                            }
+                            case Status.ENCONTRADO: {
+                                markerOptions = new MarkerOptions()
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                        .position(new LatLng(c.getLatitude(), c.getLongitude())).title(c.getNomePet());
+                                break;
+                            }
+                        }
 
+                        if (mMap != null && markerOptions != null) {
+                            mMap.addMarker(markerOptions);
+                        }
+                    }
+                    realm.close();
                     break;
             }
 
